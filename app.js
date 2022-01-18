@@ -3,6 +3,8 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate')
 const methodOverride = require('method-override');
+const appError = require('./utilities/ExpressError');
+const asyncHandler = require('./utilities/asyncHandler');
 const url = 'mongodb://localhost:27017/n-camp';
 const Campsite = require('./models/campsite');
 const morgan = require('morgan');
@@ -26,13 +28,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(morgan('tiny'));
-app.use((req, res, next) => {
-    console.log("MIDDLEWARE");
-    return next();
-})
 
 app.get('/', (req, res) => {
-    res.send('index');
+    res.redirect('campsites');
 })
 
 app.get('/campsites', async (req, res) => {
@@ -45,13 +43,13 @@ app.get('/campsites/new', (req, res) => {
     res.render('campsites/new');
 });
 
-app.post('/campsites', async (req, res) => {
-    const { title, description, location } = req.body.campsite;
+app.post('/campsites', asyncHandler(async (req, res, next) => {
+    const { title, description, location, image, price } = req.body.campsite;
     const campsite = new Campsite(
-        { title: title, description: description, location: location });
+        { title, description, location, image, price });
     await campsite.save();
-    res.redirect('campsites');
-});
+    res.redirect(`/campsites/${campsite._id}`);
+}));
 
 app.get('/campsites/:id', async (req, res) => {
     const { id } = req.params;
@@ -59,31 +57,31 @@ app.get('/campsites/:id', async (req, res) => {
     res.render('campsites/show', { campsite });
 });
 
-app.get('/campsites/:id/edit', async (req, res) => {
+app.get('/campsites/:id/edit', asyncHandler(async (req, res) => {
     const { id } = req.params;
     const campsite = await Campsite.findById(id);
     res.render('campsites/edit', { campsite });
-});
+}));
 
-app.put('/campsites/:id', async (req, res) => {
+app.put('/campsites/:id', asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const { title, location, description } = req.body.campsite;
+    const { title, location, description, price, image } = req.body.campsite;
     await Campsite.findByIdAndUpdate({ _id: id }
-        , { title: title, location: location, description: description });
+        , { title, location, description, price, image });
     res.redirect(`/campsites/${id}`);
-})
+}));
 
-app.delete('/campsites/:id', async (req, res) => {
+app.delete('/campsites/:id', asyncHandler(async (req, res) => {
     const { id } = req.params;
     await Campsite.findOneAndDelete({ _id: id });
     res.redirect('/campsites');
-})
+}));
 
-app.use((req, res) => {
-    res.status(404).send('NOT FOUND 404!')
-})
-
+app.use((err, req, res, next) => {
+    throw new appError('hey',201);
+    res.send(`PAGE: ${e.statusCode} ${e.message}`);
+});
 
 app.listen(3000, () => {
     console.log("PORT 3000, LISTENING!");
-})
+});

@@ -1,22 +1,68 @@
 <% layout('layouts/boilerplate') %>
-    <h1>Edit - <%=campsite.title%>
-    </h1>
-    <form action="/campsites/<%=campsite._id%>?_method=PUT" method="POST">
-        <div>
-            <label for="title">Title:</label>
-            <input type="text" name="campsite[title]" id="title" value="<%=campsite.title%>">
+    <div class="row">
+        <div class="col-6 offset-3 border shadow-sm py-3">
+            <h1>Edit Campsite</h1>
+            <form action="/campsites/<%=campsite._id%>?_method=PUT" method="POST" novalidate class="form-validation">
+                <div class="mb-2">
+                    <label for="title" class="form-label">Title:</label>
+                    <input type="text" name="campsite[title]" id="title" class="form-control"
+                        value="<%=campsite.title%>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Invalid Title.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location:</label>
+                    <input type="text" name="campsite[location]" id="location" class="form-control"
+                        value="<%=campsite.location%>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Invalid Location.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="price-label">£</span>
+                        <input type="text" class="form-control" id="price" aria-label="price" placeholder="0.00"
+                            aria-describedby="price-label" name="campsite[price]" required value="<%=campsite.price%>">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Invalid Price.
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <textarea style="resize:none" name="campsite[description]" id="description" cols="15" rows="5"
+                        class="form-control" required><%=campsite.description%></textarea required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Invalid Description.
+                        </div>
+                    </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label">Image URL:</label>
+                    <input type="text" name="campsite[image]" id="image" class="form-control"
+                        value="<%=campsite.image%>" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Invalid URL.
+                        </div>
+                    </div>
+                <button type="submit" class="btn btn-outline-success">Edit</button>
+            </form>
+            <a href="/campsites" class="btn btn-outline-danger mt-3">Cancel</a>
         </div>
-        <br>
-        <div>
-            <label for="location">Location:</label>
-            <input type="text" name="campsite[location]" id="location" value="<%=campsite.location%> ">
-        </div>
-        <br>
-        <div>
-            <label for="description">Description:</label>
-            <textarea name="campsite[description]" id="description" cols="15"
-                rows="5"><%=campsite.description%></textarea>
-        </div>
-        <br>
-        <button type="submit">Edit</button>
-    </form>
+    </div>
