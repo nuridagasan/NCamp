@@ -2,15 +2,29 @@
     <h1>All Campsites</h1>
     <a href="/campsites/new">New Campsite</a>
     <% for(let campsite of campsites) { %>
-        <div>
-            <ul>
-                <li>
-                    <%= campsite.title %>
-                </li>
-                <li>
-                    <%= campsite.location %>
-                </li>
-                <a href="/campsites/<%=campsite._id%>">More.</a>
-            </ul>
+        <div class="card my-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="<%=campsite.image%>>" class="card-img-top">
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            <%= campsite.title%>
+                        </h3>
+                        <p class="card-text">
+                            <small class="text-muted">
+                            <%= campsite.location%>
+                        </small>
+                        </p>
+                        <p class="card-text">
+                            <%= campsite.description.substr(0, 200)%>
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <a class="btn btn-outline-success" href="/campsites/<%=campsite._id%>">More.</a>
+                    </div>
+                </div>
+            </div>
         </div>
         <% } %>
